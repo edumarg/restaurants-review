@@ -1,15 +1,16 @@
 const express = require("express");
 const cors = require("cors");
-
-import restautants from "./api/restaurants.route";
+require("dotenv").config();
+const restaurants = require("./api/restaurants.route");
+require("./startup/db")();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/api/v1/restaurants", restautants);
+app.use("/api/v1/restaurants", restaurants);
 app.use("*", (req, res) => res.status(404).json({ error: "NOT FOUND" }));
 
-const port = 3900;
+const port = process.env.PORT || 9000;
 
 const server = app.listen(port, () =>
   console.log(`Listening on port ${port}...`)
