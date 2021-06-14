@@ -11,10 +11,11 @@ module.exports = class RestaurantsDAO {
         .collection("restaurants");
     } catch (e) {
       console.error(`Unable to esablish a collection in restaurantsDAO: ${e}`);
+      return { restaurantsList: [], totalNumRestaurants: 0 };
     }
   }
 
-  static async getRestaurant({
+  static async getRestaurants({
     filters = null,
     page = 0,
     restaurantsPerPage = 20,
@@ -26,15 +27,16 @@ module.exports = class RestaurantsDAO {
       } else if ("cuisine" in filters) {
         query = { cuisine: { $eq: filters["cuisine"] } };
       } else if ("zipcode" in filters) {
-        query = { zipcode: { $eq: filters["zipcode"] } };
+        query = { "address.zipcode": { $eq: filters["zipcode"] } };
       }
     }
 
     let cursor;
+
     try {
       cursor = await restaurants.find(query);
     } catch (e) {
-      console.error(`Unable to issue find command: ${e}`);
+      console.error(`Unable to issue find command, ${e}`);
       return { restaurantsList: [], totalNumRestaurants: 0 };
     }
 
@@ -44,13 +46,14 @@ module.exports = class RestaurantsDAO {
 
     try {
       const restaurantsList = await displayCursor.toArray();
-      const totalNumRestaurants =
-        page === 0 ? await restaurants.coutDocuments(query) : 0;
+      const totalNumRestaurants = await restaurants.countDocuments(query);
+
       return { restaurantsList, totalNumRestaurants };
     } catch (e) {
       console.error(
-        `Unable to convert cursor to array or problems counting documents: ${e}`
+        `Unable to convert cursor to array or problem counting documents, ${e}`
       );
+      return { restaurantsList: [], totalNumRestaurants: 0 };
     }
   }
 };

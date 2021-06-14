@@ -3,9 +3,9 @@ const RestaurantsDAO = require("../data access object/restaurantsDAO");
 module.exports = class RestaurantController {
   static async apiGetRestaurants(req, res, next) {
     const restaurantsPerPage = req.query.restaurantsPerPage
-      ? parseInt(req.query.restaurantsPerPage)
+      ? parseInt(req.query.restaurantsPerPage, 10)
       : 20;
-    const page = req.query.page ? parseInt(req.query.page) : 0;
+    const page = req.query.page ? parseInt(req.query.page, 10) : 0;
 
     let filters = {};
     if (req.query.cuisine) {
@@ -16,17 +16,20 @@ module.exports = class RestaurantController {
       filters.name = req.query.name;
     }
 
-    const { restaurantList, totalNumberRestaurants } =
-      await RestaurantsDAO.getRestaurant(filters, page, restaurantsPerPage);
+    const { restaurantsList, totalNumRestaurants } =
+      await RestaurantsDAO.getRestaurants({
+        filters,
+        page,
+        restaurantsPerPage,
+      });
 
     let response = {
-      restaurants: restaurantList,
+      restaurants: restaurantsList,
       page: page,
       filters: filters,
-      entriesPerPage: restaurantsPerPage,
-      totalResults: totalNumberRestaurants,
+      entries_per_page: restaurantsPerPage,
+      total_results: totalNumRestaurants,
     };
-
     res.json(response);
   }
 };
