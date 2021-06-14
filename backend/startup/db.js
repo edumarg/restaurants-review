@@ -1,5 +1,6 @@
 const MongoClient = require("mongodb").MongoClient;
-const assert = require("assert");
+const RestaurantsDAO = require("../data access object/restaurantsDAO");
+
 require("dotenv").config();
 
 module.exports = function () {
@@ -9,12 +10,14 @@ module.exports = function () {
     poolSize: 50,
     wtimeout: 2500,
     useNewUrlParser: true,
+    useUnifiedTopology: true,
   })
     .catch((error) => {
       console.log(`Error connecting to the DB: ${error}`);
       process.exit(1);
     })
     .then(async (client) => {
+      await RestaurantsDAO.injectDB(client);
       console.log("Connected to the DB...");
     });
 };
