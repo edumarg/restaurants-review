@@ -1,11 +1,11 @@
 const RestaurantsDAO = require("../data access object/restaurantsDAO");
 
-module.exports = class RestaurantController {
+module.exports = class RestaurantsController {
   static async apiGetRestaurants(req, res, next) {
     const restaurantsPerPage = req.query.restaurantsPerPage
-      ? parseInt(req.query.restaurantsPerPage, 10)
+      ? parseInt(req.query.restaurantsPerPage)
       : 20;
-    const page = req.query.page ? parseInt(req.query.page, 10) : 0;
+    const page = req.query.page ? parseInt(req.query.page) : 0;
 
     let filters = {};
     if (req.query.cuisine) {
