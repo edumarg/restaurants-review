@@ -1,5 +1,6 @@
 const MongoClient = require("mongodb").MongoClient;
 const RestaurantsDAO = require("../data access object/restaurantsDAO");
+const ReviewsDAO = require("../data access object/reviewsDAO");
 
 require("dotenv").config();
 
@@ -18,6 +19,7 @@ module.exports = function () {
     })
     .then(async (client) => {
       await RestaurantsDAO.injectDB(client);
+      await ReviewsDAO.injectDB(client);
       console.log("Connected to the DB...");
     });
 };
