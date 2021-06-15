@@ -32,4 +32,28 @@ module.exports = class RestaurantsController {
     };
     res.json(response);
   }
+
+  static async apiGetRestaurantById(req, res, next) {
+    try {
+      let id = req.params.id || {};
+      let restaurant = await RestaurantsDAO.getRestaurantById(id);
+      if (!restaurant) return res.status(404).send("Restaurant not found");
+      res.json(restaurant);
+    } catch (e) {
+      console.error(`api, ${e}`);
+      res.status(500).send("Error finding restaurant by id");
+    }
+  }
+
+  static async apiGetRestaurantsCuisines(req, res, next) {
+    try {
+      let cuisines = await RestaurantsDAO.getCuisines();
+      res.json(cuisines);
+    } catch (e) {
+      console.error(`api, ${e}`);
+      res
+        .status(500)
+        .send("There was an isssue geting the restaurants cuisines");
+    }
+  }
 };
