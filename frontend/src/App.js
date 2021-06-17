@@ -1,24 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Redirect, Switch, Link } from "react-router-dom";
+import RestaurantsList from "./components/restaurantList";
+import Restaurant from "./components/restaurant";
+import Login from "./components/login";
+import NotFound from "./components/notFound";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <h1>Hello World!!!</h1>
+      <Switch>
+        <Route
+          path="/restaurants"
+          render={(props) => <RestaurantsList {...props} />}
+        />
+        <Route
+          path="/restaurant/:id"
+          render={(props) => <Restaurant {...props} />}
+        />
+        <Route path="/login" render={(props) => <Login {...props} />} />
+        <Route path="/not-found" render={(props) => <NotFound {...props} />} />
+        <Redirect exact from="/" to="/restaurants" />
+        <Redirect to="/not-found" />
+      </Switch>
+    </BrowserRouter>
   );
 }
 
