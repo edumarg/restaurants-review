@@ -55,7 +55,7 @@ const RestaurantsList = (props) => {
   const find = async (query, by) => {
     try {
       const response = await RestaurantDataService.find(query, by);
-      setRestaurants(response.data);
+      setRestaurants(response.data.restaurants);
     } catch (ex) {
       console.log(ex);
     }
@@ -81,6 +81,71 @@ const RestaurantsList = (props) => {
   return (
     <React.Fragment>
       <h1>Restaurants List</h1>
+
+      <Container className="my-3">
+        <Row className="pb-1">
+          <Col md={4}>
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Sear by name"
+                value={searchName}
+                onChange={onChangeSearchName}
+              ></input>
+              <div className="input-group-append">
+                <button
+                  className="btn btn-outline-secondary"
+                  type="button"
+                  onClick={findByName}
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+          </Col>
+          <Col md={4}>
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Sear by zip"
+                value={searchName}
+                onChange={onChangeSearchZip}
+              ></input>
+              <div className="input-group-append">
+                <button
+                  className="btn btn-outline-secondary"
+                  type="button"
+                  onClick={findByZip}
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+          </Col>
+          <Col md={4}>
+            <div className="input-group">
+              <select onChange={onChangeSearchCuisine}>
+                {cuisines.map((cuisine) => {
+                  return (
+                    <option value={cuisine}>{cuisine.substr(0, 20)}</option>
+                  );
+                })}
+              </select>
+              <div className="input-group-append">
+                <button
+                  className="btn btn-outline-secondary"
+                  type="button"
+                  onClick={findByCuisine}
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </Container>
 
       <Container>
         {/* card comoponent */}
