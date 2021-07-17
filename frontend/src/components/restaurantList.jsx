@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
+
 import UserContext from "../context/userContext";
 import RestaurantDataService from "../services/restaurants";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
 
 // random food picture generator https://loremflickr.com/g/320/240/food
 
@@ -13,14 +15,62 @@ const RestaurantsList = (props) => {
   const [searchCuisine, setSearchCuisine] = useState("");
   const [cuisines, setCuisines] = useState("All Cuisines");
 
+  const onChangeSearchName = (event) => {
+    const searchName = event.target.value;
+    setSearchName(searchName);
+  };
+
+  const onChangeSearchZip = (event) => {
+    const searchZip = event.target.value;
+    setSearchZip(searchZip);
+  };
+
+  const onChangeSearchCuisine = (event) => {
+    const searchCuisine = event.target.value;
+    setSearchCuisine(searchCuisine);
+  };
+
   const getRestaurants = async () => {
-    const response = await RestaurantDataService.getAll();
-    setRestaurants(response.data);
+    try {
+      const response = await RestaurantDataService.getAll();
+      setRestaurants(response.data);
+    } catch (ex) {
+      console.log(ex);
+    }
   };
 
   const getCuisines = async () => {
-    const response = await RestaurantDataService.getCuisines();
-    setCuisines(response.data);
+    try {
+      const response = await RestaurantDataService.getCuisines();
+      setCuisines(["All Cuisines"].concat(response.data));
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+
+  const refreshRestaurantList = () => {
+    getRestaurants();
+  };
+
+  const find = async (query, by) => {
+    try {
+      const response = await RestaurantDataService.find(query, by);
+      setRestaurants(response.data);
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+
+  const findByName = () => {
+    find(searchName, "name");
+  };
+
+  const findByZip = () => {
+    find(searchZip, "zip");
+  };
+
+  const findByCuisine = () => {
+    find(searchCuisine, "cuisine");
   };
 
   useEffect(() => {
