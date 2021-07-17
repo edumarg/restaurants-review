@@ -66,7 +66,7 @@ function App() {
                     to="/restaurants"
                     onClick={() => logout()}
                   >
-                    Logout
+                    Logout {user.name}
                   </Nav.Link>
                 )}
               </Nav>
