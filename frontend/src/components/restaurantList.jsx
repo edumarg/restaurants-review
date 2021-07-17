@@ -34,7 +34,6 @@ const RestaurantsList = (props) => {
     try {
       const response = await RestaurantDataService.getAll();
       setRestaurants(response.data.restaurants);
-      console.log("Restaurants", response.data.restaurants);
     } catch (ex) {
       console.log(ex);
     }
@@ -44,7 +43,6 @@ const RestaurantsList = (props) => {
     try {
       const response = await RestaurantDataService.getCuisines();
       setCuisines(["All Cuisines"].concat(response.data));
-      console.log("Cuisines", response.data);
     } catch (ex) {
       console.log(ex);
     }
@@ -68,7 +66,7 @@ const RestaurantsList = (props) => {
   };
 
   const findByZip = () => {
-    find(searchZip, "zip");
+    find(searchZip, "zipcode");
   };
 
   const findByCuisine = () => {
@@ -113,7 +111,7 @@ const RestaurantsList = (props) => {
                 type="text"
                 className="form-control"
                 placeholder="Sear by zip"
-                value={searchName}
+                value={searchZip}
                 onChange={onChangeSearchZip}
               ></input>
               <div className="input-group-append">
@@ -155,10 +153,11 @@ const RestaurantsList = (props) => {
       <Container>
         <Row>
           {restaurants.map((restaurant) => {
-            const address = `${restaurant.address.building} ${restaurant.address.street} ${restaurant.borough} ${restaurant.address.zipcode}`;
+            const address = `${restaurant.address.building} ${restaurant.address.street} 
+                             ${restaurant.borough} ${restaurant.address.zipcode}`;
             return (
               <Col className="m-1">
-                <Card style={{ width: "15rem" }}>
+                <Card style={{ width: "15rem", height: "100%" }}>
                   <Card.Img variant="top" src="holder.js/100px180" />
                   <Card.Body>
                     <Card.Title>{restaurant.name}</Card.Title>
