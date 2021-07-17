@@ -173,11 +173,24 @@ const RestaurantsList = (props) => {
                       </p>
                     </Card.Text>
                     <div className="d-inline-flex justify-content-evenly">
-                      <Link to={`/restaurants/${restaurant._id}`}>
+                      <Link
+                        to={`/restaurants/${restaurant._id}`}
+                        className="mx-1"
+                      >
                         <Button variant="primary" size="sm">
                           View Reviews
                         </Button>
                       </Link>
+                      <a
+                        href={`https://google.com/maps/place/${address}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mx-1"
+                      >
+                        <Button variant="primary" size="sm">
+                          View map
+                        </Button>
+                      </a>
                     </div>
                   </Card.Body>
                 </Card>
