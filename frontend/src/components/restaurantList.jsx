@@ -13,7 +13,7 @@ const RestaurantsList = (props) => {
   const [searchName, setSearchName] = useState("");
   const [searchZip, setSearchZip] = useState("");
   const [searchCuisine, setSearchCuisine] = useState("");
-  const [cuisines, setCuisines] = useState("All Cuisines");
+  const [cuisines, setCuisines] = useState(["All Cuisines"]);
 
   const onChangeSearchName = (event) => {
     const searchName = event.target.value;
@@ -33,7 +33,8 @@ const RestaurantsList = (props) => {
   const getRestaurants = async () => {
     try {
       const response = await RestaurantDataService.getAll();
-      setRestaurants(response.data);
+      setRestaurants(response.data.restaurants);
+      console.log("Restaurants", response.data.restaurants);
     } catch (ex) {
       console.log(ex);
     }
@@ -43,6 +44,7 @@ const RestaurantsList = (props) => {
     try {
       const response = await RestaurantDataService.getCuisines();
       setCuisines(["All Cuisines"].concat(response.data));
+      console.log("Cuisines", response.data);
     } catch (ex) {
       console.log(ex);
     }
@@ -74,6 +76,7 @@ const RestaurantsList = (props) => {
   };
 
   useEffect(() => {
+    console.log("CALL use Efect");
     getRestaurants();
     getCuisines();
   }, []);
@@ -126,13 +129,15 @@ const RestaurantsList = (props) => {
           </Col>
           <Col md={4}>
             <div className="input-group">
-              <select onChange={onChangeSearchCuisine}>
-                {cuisines.map((cuisine) => {
-                  return (
-                    <option value={cuisine}>{cuisine.substr(0, 20)}</option>
-                  );
-                })}
-              </select>
+              {cuisines && (
+                <select onChange={onChangeSearchCuisine}>
+                  {cuisines.map((cuisine) => {
+                    return (
+                      <option value={cuisine}>{cuisine.substr(0, 20)}</option>
+                    );
+                  })}
+                </select>
+              )}
               <div className="input-group-append">
                 <button
                   className="btn btn-outline-secondary"
@@ -148,25 +153,38 @@ const RestaurantsList = (props) => {
       </Container>
 
       <Container>
-        {/* card comoponent */}
-        <Card style={{ width: "18rem" }}>
-          <Card.Img variant="top" src="holder.js/100px180" />
-          <Card.Body>
-            <Card.Title>Card Title</Card.Title>
-            <Card.Text>
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </Card.Text>
-            <div className="d-inline-flex justify-content-evenly">
-              <Button variant="primary" size="sm">
-                Go somewhere
-              </Button>
-              <Button variant="primary" size="sm">
-                Go somewhere else
-              </Button>
-            </div>
-          </Card.Body>
-        </Card>
+        <Row>
+          {restaurants.map((restaurant) => {
+            const address = `${restaurant.address.building} ${restaurant.address.street} ${restaurant.borough} ${restaurant.address.zipcode}`;
+            return (
+              <Col className="m-1">
+                <Card style={{ width: "15rem" }}>
+                  <Card.Img variant="top" src="holder.js/100px180" />
+                  <Card.Body>
+                    <Card.Title>{restaurant.name}</Card.Title>
+                    <Card.Text>
+                      <p>
+                        <strong>Cuisine: </strong>
+                        {restaurant.cuisine}
+                      </p>
+                      <p>
+                        <strong>Address: </strong>
+                        {address}
+                      </p>
+                    </Card.Text>
+                    <div className="d-inline-flex justify-content-evenly">
+                      <Link to={`/restaurants/${restaurant._id}`}>
+                        <Button variant="primary" size="sm">
+                          View Reviews
+                        </Button>
+                      </Link>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            );
+          })}
+        </Row>
       </Container>
     </React.Fragment>
   );
